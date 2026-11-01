@@ -46,14 +46,32 @@ class PermissionsManager(context: Context) {
     }
 
     /** Requeridos = imprescindibles para las funciones activadas. */
-    fun all(settings: EngineSettings): List<PermissionInfo> = EnginePermission.entries.map { permission ->
-        val required = when (permission) {
-            EnginePermission.USAGE_ACCESS, EnginePermission.OVERLAY -> true
-            EnginePermission.CAMERA -> settings.intruderEnabled
-            EnginePermission.NOTIFICATION_LISTENER -> settings.hideNotifications
-            EnginePermission.NOTIFICATIONS, EnginePermission.BATTERY_OPTIMIZATION -> false
+    fun all(settings: EngineSettings): List<PermissionInfo> = EnginePermission.entries
+        .filter { it != EnginePermission.NOTIFICATION_LISTENER || isNotificationListenerDeclared() }
+        .map { permission ->
+            val required = when (permission) {
+                EnginePermission.USAGE_ACCESS, EnginePermission.OVERLAY -> true
+                EnginePermission.CAMERA -> settings.intruderEnabled
+                EnginePermission.NOTIFICATION_LISTENER -> settings.hideNotifications
+                EnginePermission.NOTIFICATIONS, EnginePermission.BATTERY_OPTIMIZATION -> false
+            }
+            PermissionInfo(permission, isGranted(permission), required)
         }
-        PermissionInfo(permission, isGranted(permission), required)
+
+    /**
+     * La app puede quitar el servicio del manifiesto (ver
+     * app/android/app/src/release/AndroidManifest.xml): Play Protect bloquea la
+     * instalación fuera de Play Store de apps que declaran un NotificationListener.
+     */
+    fun isNotificationListenerDeclared(): Boolean = try {
+        @Suppress("DEPRECATION")
+        appContext.packageManager.getServiceInfo(
+            ComponentName(appContext, PrivacyNotificationListener::class.java),
+            PackageManager.MATCH_DISABLED_COMPONENTS,
+        )
+        true
+    } catch (_: PackageManager.NameNotFoundException) {
+        false
     }
 
     fun coreGranted(): Boolean = hasUsageAccess() && Settings.canDrawOverlays(appContext)

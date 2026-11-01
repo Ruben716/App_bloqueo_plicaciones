@@ -1,0 +1,15 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!--
+      Google Play Protect bloquea instalar fuera de Play Store (desde el
+      navegador o el gestor de archivos) apps que declaran un servicio de
+      acceso a notificaciones. El APK de release que se descarga lo quita:
+      "Ocultar notificaciones" solo existe en debug (instalado por cable).
+      Para publicar en Play Store, borra este archivo.
+    -->
+    <application>
+        <service
+            android:name="io.github.ruben716.lock_engine.notifications.PrivacyNotificationListener"
+            tools:node="remove" />
+    </application>
+</manifest>

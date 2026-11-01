@@ -132,18 +132,20 @@ class _SettingsList extends ConsumerWidget {
                   change((s) => s.copyWith(intruderThreshold: value.first)),
             ),
           ),
-        SwitchListTile(
-          secondary: const Icon(Icons.notifications_off_rounded),
-          title: const Text('Ocultar notificaciones'),
-          subtitle: const Text('Las de apps protegidas se sustituyen por un aviso genérico'),
-          value: settings.hideNotifications,
-          onChanged: (value) async {
-            if (value && !isGranted(permissions, PermissionKind.notificationListener)) {
-              await requestPermission(ref, PermissionKind.notificationListener);
-            }
-            await change((s) => s.copyWith(hideNotifications: value));
-          },
-        ),
+        // Solo existe si el servicio está declarado (no en el APK descargable).
+        if (permissions.any((p) => p.kind == PermissionKind.notificationListener))
+          SwitchListTile(
+            secondary: const Icon(Icons.notifications_off_rounded),
+            title: const Text('Ocultar notificaciones'),
+            subtitle: const Text('Las de apps protegidas se sustituyen por un aviso genérico'),
+            value: settings.hideNotifications,
+            onChanged: (value) async {
+              if (value && !isGranted(permissions, PermissionKind.notificationListener)) {
+                await requestPermission(ref, PermissionKind.notificationListener);
+              }
+              await change((s) => s.copyWith(hideNotifications: value));
+            },
+          ),
         SwitchListTile(
           secondary: const Icon(Icons.delete_forever_rounded),
           title: const Text('Anti-desinstalación'),
