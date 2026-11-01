@@ -1,0 +1,16 @@
+include: package:flutter_lints/flutter.yaml
+
+formatter:
+  page_width: 100
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - lib/src/generated/**
+
+linter:
+  rules:
+    prefer_single_quotes: true
+    prefer_final_locals: true
+    avoid_redundant_argument_values: true

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Marca (la app puede sobrescribirla con su propio strings.xml). -->
+    <string name="lock_engine_brand">SIGILO</string>
+
+    <!-- Pantalla de bloqueo -->
+    <string name="lock_engine_prompt_pin">Introduce tu PIN</string>
+    <string name="lock_engine_prompt_password">Introduce tu contraseña</string>
+    <string name="lock_engine_prompt_pattern">Dibuja tu patrón</string>
+    <string name="lock_engine_wrong_pin">PIN incorrecto</string>
+    <string name="lock_engine_wrong_password">Contraseña incorrecta</string>
+    <string name="lock_engine_wrong_pattern">Patrón incorrecto</string>
+    <string name="lock_engine_lockout">Demasiados intentos. Espera %1$d s</string>
+    <string name="lock_engine_unlock">Desbloquear</string>
+    <string name="lock_engine_delete">Borrar</string>
+    <string name="lock_engine_biometric_button">Usar huella</string>
+
+    <!-- Biometría -->
+    <string name="lock_engine_biometric_title">Desbloquear %1$s</string>
+    <string name="lock_engine_biometric_subtitle">Confirma con tu huella</string>
+    <string name="lock_engine_use_pin">Usar PIN</string>
+    <string name="lock_engine_use_password">Usar contraseña</string>
+    <string name="lock_engine_use_pattern">Usar patrón</string>
+
+    <!-- Camuflaje -->
+    <string name="lock_engine_fake_crash_title">%1$s se ha detenido</string>
+    <string name="lock_engine_fake_crash_message">La aplicación se cerró porque se produjo un error.</string>
+    <string name="lock_engine_fake_crash_close">Cerrar app</string>
+    <string name="lock_engine_fake_crash_feedback">Enviar comentarios</string>
+
+    <!-- Notificaciones -->
+    <string name="lock_engine_channel_monitor">Protección activa</string>
+    <string name="lock_engine_channel_hidden">Notificaciones ocultas</string>
+    <string name="lock_engine_monitor_title">Protección de apps activa</string>
+    <string name="lock_engine_monitor_text">Tus apps protegidas piden tu PIN al abrirse</string>
+    <string name="lock_engine_monitor_text_guest">Modo invitado activado</string>
+    <string name="lock_engine_hidden_title">Apps protegidas</string>
+    <plurals name="lock_engine_hidden_text">
+        <item quantity="one">%d notificación oculta</item>
+        <item quantity="many">%d notificaciones ocultas</item>
+        <item quantity="other">%d notificaciones ocultas</item>
+    </plurals>
+    <string name="lock_engine_notification_listener_label">Ocultar notificaciones de apps protegidas</string>
+
+    <!-- Ajustes rápidos -->
+    <string name="lock_engine_tile_guest">Modo invitado</string>
+</resources>

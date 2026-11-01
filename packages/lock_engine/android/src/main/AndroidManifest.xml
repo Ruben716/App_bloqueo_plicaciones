@@ -1,0 +1,109 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Detectar la app en primer plano (Ajustes > Acceso a uso). -->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <!-- Dibujar la pantalla de bloqueo sobre otras apps. -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- Servicio en primer plano que mantiene vivo el motor. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Huella como atajo de la credencial propia. -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <!-- Foto del intruso (opcional, se pide solo si el usuario activa la función). -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.fingerprint"
+        android:required="false" />
+
+    <!--
+      Visibilidad de paquetes (Android 11+) sin QUERY_ALL_PACKAGES:
+      apps con icono en el launcher, launchers, ajustes y los paquetes
+      concretos que protege la función anti-desinstalación.
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.HOME" />
+        </intent>
+        <intent>
+            <action android:name="android.settings.SETTINGS" />
+        </intent>
+        <package android:name="com.android.settings" />
+        <package android:name="com.android.vending" />
+        <package android:name="com.google.android.packageinstaller" />
+        <package android:name="com.android.packageinstaller" />
+    </queries>
+
+    <application>
+        <service
+            android:name=".monitor.AppMonitorService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Bloqueo de aplicaciones elegido por el usuario: detecta la app en primer plano y muestra la pantalla de bloqueo." />
+        </service>
+
+        <service
+            android:name=".notifications.PrivacyNotificationListener"
+            android:exported="true"
+            android:label="@string/lock_engine_notification_listener_label"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".guest.GuestModeTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_lock_engine_guest"
+            android:label="@string/lock_engine_tile_guest"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".system.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Tarea propia (taskAffinity) para que al cerrarse se vuelva a la app protegida. -->
+        <activity
+            android:name=".biometric.BiometricActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:taskAffinity="io.github.ruben716.lock_engine.auth"
+            android:theme="@style/LockEngine.Theme.Auth" />
+
+        <activity
+            android:name=".intruder.IntruderCaptureActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:taskAffinity="io.github.ruben716.lock_engine.intruder"
+            android:theme="@style/LockEngine.Theme.Invisible" />
+    </application>
+</manifest>
