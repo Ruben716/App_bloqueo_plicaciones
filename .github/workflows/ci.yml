@@ -4,6 +4,10 @@ on:
   push:
     branches: [main, 'claude/**']
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   flutter:
@@ -23,9 +27,37 @@ jobs:
           flutter-version: 3.47.9
           cache: true
 
+      # Misma firma en todas las compilaciones: así el APK nuevo se instala
+      # encima del anterior sin desinstalar (y sin perder la configuración).
+      - name: Reutilizar la clave de firma de pruebas
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: sigilo-debug-keystore
+
       - name: Formato, análisis y tests (Dart + Kotlin)
         run: ./tool/check.sh
 
-      - name: Compilar APK de depuración
+      - name: Compilar APK
         working-directory: app
-        run: flutter build apk --debug
+        run: flutter build apk --release
+
+      - name: Preparar APK
+        run: cp app/build/app/outputs/flutter-apk/app-release.apk sigilo.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sigilo-apk
+          path: sigilo.apk
+
+      - name: Publicar versión de prueba
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete preview --yes --cleanup-tag || true
+          gh release create preview sigilo.apk \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            --title "Sigilo (versión de prueba)" \
+            --notes "Compilado desde ${GITHUB_REF_NAME} (${GITHUB_SHA::7}). Requiere Android 8.0 o superior."
