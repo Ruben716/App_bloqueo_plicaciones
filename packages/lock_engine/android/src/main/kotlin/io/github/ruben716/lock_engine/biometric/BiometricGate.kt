@@ -144,9 +144,9 @@ class BiometricGate(context: Context) {
                 }
 
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
+                    // El botón "Usar PIN" se gestiona en su propio listener.
                     val cancelled = errorCode == BiometricPrompt.BIOMETRIC_ERROR_USER_CANCELED ||
-                        errorCode == BiometricPrompt.BIOMETRIC_ERROR_CANCELED ||
-                        errorCode == BiometricPrompt.BIOMETRIC_ERROR_NEGATIVE_BUTTON
+                        errorCode == BiometricPrompt.BIOMETRIC_ERROR_CANCELED
                     deliver(if (cancelled) BiometricOutcome.CANCELLED else BiometricOutcome.ERROR)
                 }
             },
