@@ -9,7 +9,9 @@ for module in packages/design_system packages/lock_engine app; do
   (
     cd "$ROOT/$module"
     flutter pub get >/dev/null
-    dart format --output=none --set-exit-if-changed lib $( [ -d test ] && echo test )
+    # El código generado por Pigeon no se revisa: se regenera tal cual.
+    find lib $( [ -d test ] && echo test ) -name '*.dart' -not -path '*/generated/*' -print0 |
+      xargs -0 dart format --output=none --set-exit-if-changed
     flutter analyze
     if [ -d test ]; then flutter test; fi
   )
