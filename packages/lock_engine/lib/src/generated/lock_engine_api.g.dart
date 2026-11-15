@@ -10,9 +10,9 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart' show immutable, protected, visibleForTesting;
 
 Object? _extractReplyValueOrThrow(
-  List<Object?>? replyList,
-  String channelName, {
-  required bool isNullValid,
+    List<Object?>? replyList,
+    String channelName, {
+    required bool isNullValid,
 }) {
   if (replyList == null) {
     throw PlatformException(
@@ -46,7 +46,8 @@ bool _deepEquals(Object? a, Object? b) {
   }
   if (a is List && b is List) {
     return a.length == b.length &&
-        a.indexed.every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+        a.indexed
+            .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
   }
   if (a is Map && b is Map) {
     if (a.length != b.length) {
@@ -95,19 +96,22 @@ int _deepHash(Object? value) {
   return value.hashCode;
 }
 
+
 /// Tipo de credencial propia de Sigilo (independiente del bloqueo del sistema).
-enum CredentialKind { pin, password, pattern }
+enum CredentialKind {
+  pin,
+  password,
+  pattern;
+}
 
 /// Cuándo se vuelve a bloquear una app ya desbloqueada.
 enum RelockPolicy {
   /// Al salir de la app.
   immediately,
-
   /// Tras X minutos fuera de la app.
   afterTimeout,
-
   /// Solo al apagar la pantalla.
-  onScreenOff,
+  onScreenOff;
 }
 
 enum PermissionKind {
@@ -116,10 +120,15 @@ enum PermissionKind {
   notifications,
   notificationListener,
   camera,
-  batteryOptimization,
+  batteryOptimization;
 }
 
-enum BiometricStatus { available, notEnrolled, unsupported, invalidated }
+enum BiometricStatus {
+  available,
+  notEnrolled,
+  unsupported,
+  invalidated;
+}
 
 enum ActivityKind {
   unlocked,
@@ -129,7 +138,7 @@ enum ActivityKind {
   guestModeOn,
   guestModeOff,
   recoveryUsed,
-  biometricInvalidated,
+  biometricInvalidated;
 }
 
 class InstalledApp {
@@ -154,12 +163,17 @@ class InstalledApp {
   bool isRecommended;
 
   List<Object?> _toList() {
-    return <Object?>[packageName, label, isSystem, canLock, isRecommended];
+    return <Object?>[
+      packageName,
+      label,
+      isSystem,
+      canLock,
+      isRecommended,
+    ];
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static InstalledApp decode(Object result) {
     result as List<Object?>;
@@ -181,11 +195,7 @@ class InstalledApp {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(packageName, other.packageName) &&
-        _deepEquals(label, other.label) &&
-        _deepEquals(isSystem, other.isSystem) &&
-        _deepEquals(canLock, other.canLock) &&
-        _deepEquals(isRecommended, other.isRecommended);
+    return _deepEquals(packageName, other.packageName) && _deepEquals(label, other.label) && _deepEquals(isSystem, other.isSystem) && _deepEquals(canLock, other.canLock) && _deepEquals(isRecommended, other.isRecommended);
   }
 
   @override
@@ -201,7 +211,11 @@ class InstalledApp {
 /// Ventana horaria. `days` usa ISO-8601: 1 = lunes ... 7 = domingo.
 /// Si `startMinute > endMinute` la ventana cruza la medianoche.
 class Schedule {
-  Schedule({required this.days, required this.startMinute, required this.endMinute});
+  Schedule({
+    required this.days,
+    required this.startMinute,
+    required this.endMinute,
+  });
 
   List<int> days;
 
@@ -210,12 +224,15 @@ class Schedule {
   int endMinute;
 
   List<Object?> _toList() {
-    return <Object?>[days, startMinute, endMinute];
+    return <Object?>[
+      days,
+      startMinute,
+      endMinute,
+    ];
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static Schedule decode(Object result) {
     result as List<Object?>;
@@ -235,9 +252,7 @@ class Schedule {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(days, other.days) &&
-        _deepEquals(startMinute, other.startMinute) &&
-        _deepEquals(endMinute, other.endMinute);
+    return _deepEquals(days, other.days) && _deepEquals(startMinute, other.startMinute) && _deepEquals(endMinute, other.endMinute);
   }
 
   @override
@@ -276,12 +291,18 @@ class LockProfile {
   Schedule? schedule;
 
   List<Object?> _toList() {
-    return <Object?>[id, name, packages, enabled, isDefault, schedule];
+    return <Object?>[
+      id,
+      name,
+      packages,
+      enabled,
+      isDefault,
+      schedule,
+    ];
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static LockProfile decode(Object result) {
     result as List<Object?>;
@@ -304,12 +325,7 @@ class LockProfile {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(id, other.id) &&
-        _deepEquals(name, other.name) &&
-        _deepEquals(packages, other.packages) &&
-        _deepEquals(enabled, other.enabled) &&
-        _deepEquals(isDefault, other.isDefault) &&
-        _deepEquals(schedule, other.schedule);
+    return _deepEquals(id, other.id) && _deepEquals(name, other.name) && _deepEquals(packages, other.packages) && _deepEquals(enabled, other.enabled) && _deepEquals(isDefault, other.isDefault) && _deepEquals(schedule, other.schedule);
   }
 
   @override
@@ -372,8 +388,7 @@ class EngineSettings {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static EngineSettings decode(Object result) {
     result as List<Object?>;
@@ -400,16 +415,7 @@ class EngineSettings {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(relockPolicy, other.relockPolicy) &&
-        _deepEquals(relockTimeoutMinutes, other.relockTimeoutMinutes) &&
-        _deepEquals(biometricEnabled, other.biometricEnabled) &&
-        _deepEquals(intruderEnabled, other.intruderEnabled) &&
-        _deepEquals(intruderThreshold, other.intruderThreshold) &&
-        _deepEquals(hideNotifications, other.hideNotifications) &&
-        _deepEquals(antiUninstall, other.antiUninstall) &&
-        _deepEquals(fakeCrash, other.fakeCrash) &&
-        _deepEquals(blockScreenshots, other.blockScreenshots) &&
-        _deepEquals(themeId, other.themeId);
+    return _deepEquals(relockPolicy, other.relockPolicy) && _deepEquals(relockTimeoutMinutes, other.relockTimeoutMinutes) && _deepEquals(biometricEnabled, other.biometricEnabled) && _deepEquals(intruderEnabled, other.intruderEnabled) && _deepEquals(intruderThreshold, other.intruderThreshold) && _deepEquals(hideNotifications, other.hideNotifications) && _deepEquals(antiUninstall, other.antiUninstall) && _deepEquals(fakeCrash, other.fakeCrash) && _deepEquals(blockScreenshots, other.blockScreenshots) && _deepEquals(themeId, other.themeId);
   }
 
   @override
@@ -423,19 +429,24 @@ class EngineSettings {
 }
 
 class GuestState {
-  GuestState({required this.active, required this.allowedPackages});
+  GuestState({
+    required this.active,
+    required this.allowedPackages,
+  });
 
   bool active;
 
   List<String> allowedPackages;
 
   List<Object?> _toList() {
-    return <Object?>[active, allowedPackages];
+    return <Object?>[
+      active,
+      allowedPackages,
+    ];
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static GuestState decode(Object result) {
     result as List<Object?>;
@@ -518,8 +529,7 @@ class EngineStatus {
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static EngineStatus decode(Object result) {
     result as List<Object?>;
@@ -546,16 +556,7 @@ class EngineStatus {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(enabled, other.enabled) &&
-        _deepEquals(running, other.running) &&
-        _deepEquals(credentialSet, other.credentialSet) &&
-        _deepEquals(credentialKind, other.credentialKind) &&
-        _deepEquals(pinLength, other.pinLength) &&
-        _deepEquals(guestActive, other.guestActive) &&
-        _deepEquals(activeProfileIds, other.activeProfileIds) &&
-        _deepEquals(lockedAppCount, other.lockedAppCount) &&
-        _deepEquals(intruderCount, other.intruderCount) &&
-        _deepEquals(missingRequiredPermissions, other.missingRequiredPermissions);
+    return _deepEquals(enabled, other.enabled) && _deepEquals(running, other.running) && _deepEquals(credentialSet, other.credentialSet) && _deepEquals(credentialKind, other.credentialKind) && _deepEquals(pinLength, other.pinLength) && _deepEquals(guestActive, other.guestActive) && _deepEquals(activeProfileIds, other.activeProfileIds) && _deepEquals(lockedAppCount, other.lockedAppCount) && _deepEquals(intruderCount, other.intruderCount) && _deepEquals(missingRequiredPermissions, other.missingRequiredPermissions);
   }
 
   @override
@@ -569,7 +570,11 @@ class EngineStatus {
 }
 
 class PermissionState {
-  PermissionState({required this.kind, required this.granted, required this.required});
+  PermissionState({
+    required this.kind,
+    required this.granted,
+    required this.required,
+  });
 
   PermissionKind kind;
 
@@ -578,12 +583,15 @@ class PermissionState {
   bool required;
 
   List<Object?> _toList() {
-    return <Object?>[kind, granted, required];
+    return <Object?>[
+      kind,
+      granted,
+      required,
+    ];
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static PermissionState decode(Object result) {
     result as List<Object?>;
@@ -603,9 +611,7 @@ class PermissionState {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(kind, other.kind) &&
-        _deepEquals(granted, other.granted) &&
-        _deepEquals(required, other.required);
+    return _deepEquals(kind, other.kind) && _deepEquals(granted, other.granted) && _deepEquals(required, other.required);
   }
 
   @override
@@ -632,12 +638,15 @@ class AuthResult {
   int lockoutRemainingMs;
 
   List<Object?> _toList() {
-    return <Object?>[success, failedAttempts, lockoutRemainingMs];
+    return <Object?>[
+      success,
+      failedAttempts,
+      lockoutRemainingMs,
+    ];
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static AuthResult decode(Object result) {
     result as List<Object?>;
@@ -657,9 +666,7 @@ class AuthResult {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(success, other.success) &&
-        _deepEquals(failedAttempts, other.failedAttempts) &&
-        _deepEquals(lockoutRemainingMs, other.lockoutRemainingMs);
+    return _deepEquals(success, other.success) && _deepEquals(failedAttempts, other.failedAttempts) && _deepEquals(lockoutRemainingMs, other.lockoutRemainingMs);
   }
 
   @override
@@ -689,12 +696,16 @@ class RecoveryResult {
   String? errorMessage;
 
   List<Object?> _toList() {
-    return <Object?>[success, lockoutRemainingMs, newRecoveryCode, errorMessage];
+    return <Object?>[
+      success,
+      lockoutRemainingMs,
+      newRecoveryCode,
+      errorMessage,
+    ];
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static RecoveryResult decode(Object result) {
     result as List<Object?>;
@@ -715,10 +726,7 @@ class RecoveryResult {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(success, other.success) &&
-        _deepEquals(lockoutRemainingMs, other.lockoutRemainingMs) &&
-        _deepEquals(newRecoveryCode, other.newRecoveryCode) &&
-        _deepEquals(errorMessage, other.errorMessage);
+    return _deepEquals(success, other.success) && _deepEquals(lockoutRemainingMs, other.lockoutRemainingMs) && _deepEquals(newRecoveryCode, other.newRecoveryCode) && _deepEquals(errorMessage, other.errorMessage);
   }
 
   @override
@@ -748,12 +756,16 @@ class IntruderPhoto {
   String appLabel;
 
   List<Object?> _toList() {
-    return <Object?>[path, timestampMs, packageName, appLabel];
+    return <Object?>[
+      path,
+      timestampMs,
+      packageName,
+      appLabel,
+    ];
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static IntruderPhoto decode(Object result) {
     result as List<Object?>;
@@ -774,10 +786,7 @@ class IntruderPhoto {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(path, other.path) &&
-        _deepEquals(timestampMs, other.timestampMs) &&
-        _deepEquals(packageName, other.packageName) &&
-        _deepEquals(appLabel, other.appLabel);
+    return _deepEquals(path, other.path) && _deepEquals(timestampMs, other.timestampMs) && _deepEquals(packageName, other.packageName) && _deepEquals(appLabel, other.appLabel);
   }
 
   @override
@@ -791,7 +800,12 @@ class IntruderPhoto {
 }
 
 class ActivityEntry {
-  ActivityEntry({required this.timestampMs, required this.kind, this.packageName, this.appLabel});
+  ActivityEntry({
+    required this.timestampMs,
+    required this.kind,
+    this.packageName,
+    this.appLabel,
+  });
 
   int timestampMs;
 
@@ -802,12 +816,16 @@ class ActivityEntry {
   String? appLabel;
 
   List<Object?> _toList() {
-    return <Object?>[timestampMs, kind, packageName, appLabel];
+    return <Object?>[
+      timestampMs,
+      kind,
+      packageName,
+      appLabel,
+    ];
   }
 
   Object encode() {
-    return _toList();
-  }
+    return _toList();  }
 
   static ActivityEntry decode(Object result) {
     result as List<Object?>;
@@ -828,10 +846,7 @@ class ActivityEntry {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(timestampMs, other.timestampMs) &&
-        _deepEquals(kind, other.kind) &&
-        _deepEquals(packageName, other.packageName) &&
-        _deepEquals(appLabel, other.appLabel);
+    return _deepEquals(timestampMs, other.timestampMs) && _deepEquals(kind, other.kind) && _deepEquals(packageName, other.packageName) && _deepEquals(appLabel, other.appLabel);
   }
 
   @override
@@ -844,6 +859,7 @@ class ActivityEntry {
   }
 }
 
+
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -851,52 +867,52 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    } else if (value is CredentialKind) {
+    }    else if (value is CredentialKind) {
       buffer.putUint8(129);
       writeValue(buffer, value.index);
-    } else if (value is RelockPolicy) {
+    }    else if (value is RelockPolicy) {
       buffer.putUint8(130);
       writeValue(buffer, value.index);
-    } else if (value is PermissionKind) {
+    }    else if (value is PermissionKind) {
       buffer.putUint8(131);
       writeValue(buffer, value.index);
-    } else if (value is BiometricStatus) {
+    }    else if (value is BiometricStatus) {
       buffer.putUint8(132);
       writeValue(buffer, value.index);
-    } else if (value is ActivityKind) {
+    }    else if (value is ActivityKind) {
       buffer.putUint8(133);
       writeValue(buffer, value.index);
-    } else if (value is InstalledApp) {
+    }    else if (value is InstalledApp) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else if (value is Schedule) {
+    }    else if (value is Schedule) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    } else if (value is LockProfile) {
+    }    else if (value is LockProfile) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    } else if (value is EngineSettings) {
+    }    else if (value is EngineSettings) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    } else if (value is GuestState) {
+    }    else if (value is GuestState) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    } else if (value is EngineStatus) {
+    }    else if (value is EngineStatus) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    } else if (value is PermissionState) {
+    }    else if (value is PermissionState) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    } else if (value is AuthResult) {
+    }    else if (value is AuthResult) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    } else if (value is RecoveryResult) {
+    }    else if (value is RecoveryResult) {
       buffer.putUint8(142);
       writeValue(buffer, value.encode());
-    } else if (value is IntruderPhoto) {
+    }    else if (value is IntruderPhoto) {
       buffer.putUint8(143);
       writeValue(buffer, value.encode());
-    } else if (value is ActivityEntry) {
+    }    else if (value is ActivityEntry) {
       buffer.putUint8(144);
       writeValue(buffer, value.encode());
     } else {
@@ -954,20 +970,21 @@ class LockEngineHostApi {
   /// Constructor for [LockEngineHostApi]. The [binaryMessenger] named argument is
   /// available for dependency injection. If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  LockEngineHostApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-    : pigeonVar_binaryMessenger = binaryMessenger,
-      pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
-          ? '.$messageChannelSuffix'
-          : '';
+  LockEngineHostApi({
+      BinaryMessenger? binaryMessenger, 
+      String messageChannelSuffix = '', 
+      })
+      : pigeonVar_binaryMessenger = binaryMessenger,
+        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
 
   final BinaryMessenger? pigeonVar_binaryMessenger;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
 
+
   Future<EngineStatus> getStatus() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getStatus$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getStatus$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -977,16 +994,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as EngineStatus;
   }
 
   Future<void> setEngineEnabled(bool enabled) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setEngineEnabled$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setEngineEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -995,13 +1012,17 @@ class LockEngineHostApi {
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[enabled]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(pigeonVar_replyList, pigeonVar_channelName, isNullValid: true);
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   /// Devuelve un mensaje de error si la credencial es débil o inválida.
   Future<String?> validateCredential(CredentialKind kind, String secret) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.validateCredential$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.validateCredential$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1011,17 +1032,17 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
     return pigeonVar_replyValue as String?;
   }
 
   /// Guarda la credencial. La primera vez devuelve el código de recuperación.
   Future<String?> setCredential(CredentialKind kind, String secret) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setCredential$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setCredential$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1031,16 +1052,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
     return pigeonVar_replyValue as String?;
   }
 
   Future<AuthResult> verifyCredential(String secret) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.verifyCredential$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.verifyCredential$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1050,16 +1071,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as AuthResult;
   }
 
   Future<int> getLockoutRemainingMs() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getLockoutRemainingMs$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getLockoutRemainingMs$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1069,43 +1090,35 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as int;
   }
 
-  Future<RecoveryResult> resetWithRecoveryCode(
-    String code,
-    CredentialKind kind,
-    String newSecret,
-  ) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.resetWithRecoveryCode$pigeonVar_messageChannelSuffix';
+  Future<RecoveryResult> resetWithRecoveryCode(String code, CredentialKind kind, String newSecret) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.resetWithRecoveryCode$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[
-      code,
-      kind,
-      newSecret,
-    ]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[code, kind, newSecret]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as RecoveryResult;
   }
 
   Future<String> regenerateRecoveryCode() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.regenerateRecoveryCode$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.regenerateRecoveryCode$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1115,16 +1128,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as String;
   }
 
   Future<BiometricStatus> getBiometricStatus() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getBiometricStatus$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getBiometricStatus$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1134,17 +1147,17 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as BiometricStatus;
   }
 
   /// Devuelve el estado final (puede fallar si no hay huellas registradas).
   Future<bool> setBiometricEnabled(bool enabled) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setBiometricEnabled$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setBiometricEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1154,16 +1167,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as bool;
   }
 
   Future<bool> authenticateBiometric(String title, String subtitle) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.authenticateBiometric$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.authenticateBiometric$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1173,16 +1186,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as bool;
   }
 
   Future<List<InstalledApp>> getInstalledApps() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getInstalledApps$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getInstalledApps$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1192,38 +1205,35 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return (pigeonVar_replyValue! as List<Object?>).cast<InstalledApp>();
   }
 
   Future<Uint8List?> getAppIcon(String packageName, int sizePx) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getAppIcon$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getAppIcon$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[
-      packageName,
-      sizePx,
-    ]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[packageName, sizePx]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
     return pigeonVar_replyValue as Uint8List?;
   }
 
   Future<EngineSettings> getSettings() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getSettings$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getSettings$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1233,16 +1243,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as EngineSettings;
   }
 
   Future<void> updateSettings(EngineSettings settings) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.updateSettings$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.updateSettings$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1251,12 +1261,16 @@ class LockEngineHostApi {
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[settings]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(pigeonVar_replyList, pigeonVar_channelName, isNullValid: true);
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   Future<List<LockProfile>> getProfiles() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getProfiles$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getProfiles$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1266,16 +1280,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return (pigeonVar_replyValue! as List<Object?>).cast<LockProfile>();
   }
 
   Future<void> saveProfile(LockProfile profile) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.saveProfile$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.saveProfile$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1284,12 +1298,16 @@ class LockEngineHostApi {
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[profile]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(pigeonVar_replyList, pigeonVar_channelName, isNullValid: true);
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   Future<void> deleteProfile(String id) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.deleteProfile$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.deleteProfile$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1298,30 +1316,35 @@ class LockEngineHostApi {
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[id]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(pigeonVar_replyList, pigeonVar_channelName, isNullValid: true);
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   /// Atajo: bloquea/desbloquea una app en el perfil por defecto.
   Future<void> setAppLocked(String packageName, bool locked) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setAppLocked$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setAppLocked$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[
-      packageName,
-      locked,
-    ]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[packageName, locked]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(pigeonVar_replyList, pigeonVar_channelName, isNullValid: true);
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   Future<GuestState> getGuestState() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getGuestState$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getGuestState$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1331,16 +1354,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return pigeonVar_replyValue! as GuestState;
   }
 
   Future<void> setGuestMode(bool active) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setGuestMode$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setGuestMode$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1349,12 +1372,16 @@ class LockEngineHostApi {
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[active]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(pigeonVar_replyList, pigeonVar_channelName, isNullValid: true);
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   Future<void> setGuestAllowedPackages(List<String> packages) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setGuestAllowedPackages$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.setGuestAllowedPackages$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1363,12 +1390,16 @@ class LockEngineHostApi {
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[packages]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(pigeonVar_replyList, pigeonVar_channelName, isNullValid: true);
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   Future<List<PermissionState>> getPermissions() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getPermissions$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getPermissions$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1378,16 +1409,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return (pigeonVar_replyValue! as List<Object?>).cast<PermissionState>();
   }
 
   Future<void> requestPermission(PermissionKind kind) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.requestPermission$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.requestPermission$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1396,12 +1427,35 @@ class LockEngineHostApi {
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[kind]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(pigeonVar_replyList, pigeonVar_channelName, isNullValid: true);
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
+  }
+
+  /// Abre "Información de la app" (para "Permitir configuración restringida").
+  Future<void> openAppDetails() async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.openAppDetails$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   Future<List<IntruderPhoto>> getIntruderPhotos() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getIntruderPhotos$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getIntruderPhotos$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1411,16 +1465,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return (pigeonVar_replyValue! as List<Object?>).cast<IntruderPhoto>();
   }
 
   Future<void> deleteIntruderPhoto(String path) async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.deleteIntruderPhoto$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.deleteIntruderPhoto$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1429,12 +1483,16 @@ class LockEngineHostApi {
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[path]);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(pigeonVar_replyList, pigeonVar_channelName, isNullValid: true);
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   Future<void> clearIntruderPhotos() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.clearIntruderPhotos$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.clearIntruderPhotos$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1443,12 +1501,16 @@ class LockEngineHostApi {
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(pigeonVar_replyList, pigeonVar_channelName, isNullValid: true);
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   Future<List<ActivityEntry>> getActivityLog() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getActivityLog$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.getActivityLog$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1458,16 +1520,16 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: false,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
     return (pigeonVar_replyValue! as List<Object?>).cast<ActivityEntry>();
   }
 
   Future<void> clearActivityLog() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.clearActivityLog$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.clearActivityLog$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1476,13 +1538,17 @@ class LockEngineHostApi {
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
-    _extractReplyValueOrThrow(pigeonVar_replyList, pigeonVar_channelName, isNullValid: true);
+    _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
   }
 
   /// Ruta solicitada al abrir la app desde el mosaico de Ajustes rápidos.
   Future<String?> consumeLaunchRoute() async {
-    final pigeonVar_channelName =
-        'dev.flutter.pigeon.lock_engine.LockEngineHostApi.consumeLaunchRoute$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channelName = 'dev.flutter.pigeon.lock_engine.LockEngineHostApi.consumeLaunchRoute$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -1492,10 +1558,11 @@ class LockEngineHostApi {
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-      pigeonVar_replyList,
-      pigeonVar_channelName,
-      isNullValid: true,
-    );
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: true,
+    )
+    ;
     return pigeonVar_replyValue as String?;
   }
 }

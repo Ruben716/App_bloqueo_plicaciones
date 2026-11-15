@@ -188,6 +188,10 @@ internal class LockEngineApiImpl(
         graph.permissions.request(kind.toDomain(), activityProvider())
     }
 
+    override fun openAppDetails() {
+        graph.permissions.openAppDetails(activityProvider())
+    }
+
     // ----------------------------------------------- Intrusos / actividad
 
     override fun getIntruderPhotos(): List<IntruderPhoto> =

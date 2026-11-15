@@ -307,6 +307,9 @@ abstract class LockEngineHostApi {
 
   void requestPermission(PermissionKind kind);
 
+  /// Abre "Información de la app" (para "Permitir configuración restringida").
+  void openAppDetails();
+
   // ------------------------------------------------- Intrusos / actividad
   @TaskQueue(type: TaskQueueType.serialBackgroundThread)
   List<IntruderPhoto> getIntruderPhotos();

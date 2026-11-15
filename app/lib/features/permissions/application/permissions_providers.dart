@@ -19,5 +19,11 @@ Future<void> requestPermission(WidgetRef ref, PermissionKind kind) async {
   await ref.read(lockEngineApiProvider).requestPermission(kind);
 }
 
+/// Abre "Información de la app" para "Permitir configuración restringida".
+Future<void> openAppDetails(WidgetRef ref) async {
+  ref.read(appSessionProvider.notifier).keepUnlockedDuringExternalAction();
+  await ref.read(lockEngineApiProvider).openAppDetails();
+}
+
 bool isGranted(List<PermissionState> permissions, PermissionKind kind) =>
     permissions.any((p) => p.kind == kind && p.granted);

@@ -1046,6 +1046,8 @@ interface LockEngineHostApi {
   fun setGuestAllowedPackages(packages: List<String>)
   fun getPermissions(): List<PermissionState>
   fun requestPermission(kind: PermissionKind)
+  /** Abre "Información de la app" (para "Permitir configuración restringida"). */
+  fun openAppDetails()
   fun getIntruderPhotos(): List<IntruderPhoto>
   fun deleteIntruderPhoto(path: String)
   fun clearIntruderPhotos()
@@ -1462,6 +1464,22 @@ interface LockEngineHostApi {
             val kindArg = args[0] as PermissionKind
             val wrapped: List<Any?> = try {
               api.requestPermission(kindArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              LockEngineApiPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.lock_engine.LockEngineHostApi.openAppDetails$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              api.openAppDetails()
               listOf(null)
             } catch (exception: Throwable) {
               LockEngineApiPigeonUtils.wrapError(exception)

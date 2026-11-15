@@ -42,6 +42,7 @@ class PermissionsPage extends ConsumerWidget {
                   style: theme.textTheme.bodyLarge,
                 ),
               ),
+              if (missingRequired > 0) _RestrictedSettingsHelp(onOpen: () => openAppDetails(ref)),
               for (final permission in _sorted(list))
                 _PermissionTile(
                   state: permission,
@@ -144,6 +145,51 @@ class _PermissionTile extends StatelessWidget {
                       onPressed: onRequest,
                       child: const Text('Conceder'),
                     ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Android 13+ marca como "configuración restringida" algunos permisos de las
+/// apps instaladas fuera de una tienda: el interruptor aparece gris.
+class _RestrictedSettingsHelp extends StatelessWidget {
+  const _RestrictedSettingsHelp({required this.onOpen});
+
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(Space.lg, 0, Space.lg, Space.md),
+      child: Card(
+        color: scheme.tertiaryContainer,
+        child: Padding(
+          padding: const EdgeInsets.all(Space.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '¿El interruptor está gris y dice "configuración restringida"?',
+                style: theme.textTheme.titleMedium?.copyWith(color: scheme.onTertiaryContainer),
+              ),
+              const SizedBox(height: Space.sm),
+              Text(
+                '1. Toca "Abrir información de Sigilo".\n'
+                '2. Toca ⋮ (arriba a la derecha) → "Permitir configuración restringida".\n'
+                '3. Vuelve aquí y toca "Conceder" otra vez.',
+                style: theme.textTheme.bodyMedium?.copyWith(color: scheme.onTertiaryContainer),
+              ),
+              const SizedBox(height: Space.md),
+              FilledButton.tonalIcon(
+                onPressed: onOpen,
+                icon: const Icon(Icons.open_in_new_rounded),
+                label: const Text('Abrir información de Sigilo'),
+              ),
             ],
           ),
         ),

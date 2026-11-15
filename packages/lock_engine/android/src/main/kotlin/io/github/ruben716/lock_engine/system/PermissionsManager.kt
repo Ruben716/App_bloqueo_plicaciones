@@ -119,6 +119,15 @@ class PermissionsManager(context: Context) {
         }
     }
 
+    /**
+     * Android 13+ bloquea algunos permisos en apps instaladas fuera de una
+     * tienda ("configuración restringida"). Se desbloquean desde el menú ⋮
+     * de la información de la app.
+     */
+    fun openAppDetails(activity: Activity?) {
+        openSettings(activity, Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri()))
+    }
+
     private fun hasUsageAccess(): Boolean {
         val appOps = appContext.getSystemService(AppOpsManager::class.java) ?: return false
         val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
